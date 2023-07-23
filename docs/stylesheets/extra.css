@@ -1,0 +1,6 @@
+[data-md-color-scheme="lukablue"] {
+    --md-primary-fg-color:        #41738b; /* A light blue, evoking clear skies */
+    --md-primary-fg-color--light: #D0E7FF; /* A softer, pastel blue */
+    --md-primary-fg-color--dark:  #537895; /* A darker blue, like the deep ocean */
+}
+  
