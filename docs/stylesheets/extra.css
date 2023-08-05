@@ -1,6 +1,8 @@
 [data-md-color-scheme="lukablue"] {
-    --md-primary-fg-color:        #41738b; /* A light blue, evoking clear skies */
-    --md-primary-fg-color--light: #D0E7FF; /* A softer, pastel blue */
-    --md-primary-fg-color--dark:  #537895; /* A darker blue, like the deep ocean */
+    --md-primary-fg-color:        #f4eeee; /* Black */
+    --md-primary-fg-color--light: #111010; /* Gray */
+    --md-primary-fg-color--dark:  #d16060; /* Black */
+    --md-accent-fg-color:         #cc9036; /* White */
+    --md-accent-fg-color--light:  #d60808; /* Light Gray */
+    --md-accent-fg-color--dark:   #808080; /* Gray */
 }
-  

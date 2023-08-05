@@ -112,13 +112,32 @@ Since the p-value calculated 0.0059 is lower than our cut-off of 0.05, we reject
 
 ## One-sided test
 
-
-## Two sided test
+In the previous example, the null hypotheses was H0: coin is fair (p=0.5) and the alternative hypothesis was Ha: coin is biased toward heads (p>0.5). With this hypothesis and flipping the coin 20 times, the null hypothesis would only rejected if the number of heads in 20 coin tosses was some number greater than 15. The 'rejection region' (shown as the blue bars in the graphs below) lies in the right tail of the distribution of the number of heads in 20 tosses of a coin. This type of experiment is called a one-sided test becasuse the alternative has the 'greater than' symbol'.
 
 ![Image title](images/histogram.png){ align=left }
 
+## Two sided test
 
+On the other hand if you were testing H0: coin is fair (p=0.5) against the alternative hypothesis Ha: coin is not fair (p not equal to 0.5), you would reject the null hypothesis in favor of the alternative hypothesis if the number of heads was some number more than 15 or some number less than 5.  For example, we migh reject H0 in favour of the alternative if the number of heads was 3 or 18. If the alternative hypothesis has the not equals sign, then the rejection region would lie in both tails of the probability distribution of the number of heads.  This is shown by the shaded portion of the graph.  This is a two-tail test with rejection regions in both tails.
+
+![Image title](images/two_sided_histogram.png){ align=left }
+
+```py title="binomial_test_two_sided.py"
+
+# Two-sided Binomial test
+p_value = binomtest(16, 20, 0.5, alternative='two-sided')
+
+print(p_value)
+
+```
+
+<div style="font-family: monospace; font-size: 0.85em; color: #333; background-color: #f9f9f9; padding: 10px; margin-top: 10px; border-left: 3px solid #ddd;">
+<b>Output:</b><br/>
+BinomTestResult(k=16, n=20, alternative='two-sided', statistic=0.8, pvalue=0.01181793212890625)
+</div>
 
 ## Q&A
 
 ## Common misconceptions (Fighting Dolos)
+
+
