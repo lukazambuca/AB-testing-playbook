@@ -1,18 +1,38 @@
+<script>
+    function highlightWords() {
+        var words = document.querySelectorAll('.highlight-word');
+        words.forEach(function(word) {
+            word.style.backgroundColor = 'rgba(147, 112, 219, 0.6)';
+        });
+    }
+
+    function unhighlightWords() {
+        var words = document.querySelectorAll('.highlight-word');
+        words.forEach(function(word) {
+            word.style.backgroundColor = 'transparent';
+        });
+    }
+</script>
+
+
 # Introduction to P-values
 
-In this chapter we cover the definition of the infamou P-value, explain it using a simple example, show you how to calculate the value itself, and how where it falls in the world of experiments. 
+In this chapter we cover the definition of the infamous P-value, explain it using a simple example, show you how to calculate the value itself, and how where it falls in the world of experiments. 
 
 
 ## Too Long; Dont Wanna Read
 
-<div style="border: 2px solid darkblue; border-radius: 10px; padding: 14px;">
-P-value is a measure used in statistics to help you decide if your 'null hypothesis' (the assumption that there is no effect or relationship) is likely to be true or not. It's the probability that you would observe the data you have (or more extreme data) if the null hypothesis is true.
+<div style="border: 2px solid darkblue; border-radius: 10px; padding: 14px; background-color: #f9f9f9; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-10px) scale(1.05)'; this.style.boxShadow='0 12px 16px rgba(0, 0, 0, 0.2), 0 10px 30px rgba(0, 0, 0, 0.2)'; highlightWords();" onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1)'; unhighlightWords();">
+
+P-value is a measure used in statistics to help you decide if your <span class="highlight-word" style="background-color: transparent;">null hypothesis</span> (the assumption that there is no effect or relationship) is likely to be true or not. It's the probability that you would observe the data you have (or more extreme data) if the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span> is true.
 <br> <br>
-A small P-value (typically ≤ 0.05) suggests strong evidence against the null hypothesis, so you reject the null hypothesis. A large P-value (> 0.05) suggests weak evidence against the null hypothesis, so you fail to reject the null hypothesis.
+A small P-value (typically ≤ 0.05) suggests strong evidence against the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span>, so you reject the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span>. A large P-value (> 0.05) suggests weak evidence against the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span>, so you fail to reject the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span>.
 <br> <br>
 
-Remember, P-value is not the probability that the null hypothesis is true, nor it is the probability that your alternative hypothesis is false. It's just a tool to help decide whether to reject the null hypothesis.
+Remember, P-value is not the probability that the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span> is true, nor it is the probability that your alternative hypothesis is false. It's just a tool to help decide whether to reject the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span>.
 </div>
+
+
 
 
 
@@ -136,8 +156,12 @@ print(p_value)
 BinomTestResult(k=16, n=20, alternative='two-sided', statistic=0.8, pvalue=0.01181793212890625)
 </div>
 
+However, note that when you use a significance level of 0.05 in a two-tailed test, you're splitting the 0.05 into two parts: 0.025 for each direction (or tail) of the test. This means you're checking for extreme values in both directions, with each direction having a 2.5% chance of occurring by random chance.
+
 ## Q&A
 
 ## Common misconceptions (Fighting Dolos)
+
+
 
 

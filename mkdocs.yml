@@ -4,29 +4,40 @@ theme:
   custom_dir: docs/overrides
 
   features:
-    - announce.dismiss
-    - content.action.edit
-    - content.action.view
-    - content.code.annotate
-    - content.code.copy
-    # - content.tabs.link
-    - content.tooltips
-    # - header.autohide
-    # - navigation.expand
-    - navigation.footer
-    - navigation.indexes
-    # - navigation.instant
-    # - navigation.prune
-    - navigation.sections
     - navigation.tabs
-    # - navigation.tabs.sticky
-    - navigation.top
+    - navigation.instant
     - navigation.tracking
-    - search.highlight
-    - search.share
-    - search.suggest
-    - toc.follow
-    # - toc.integrate
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - header.autohide
+    - content.action.edit
+    #- content.tabs.link #Insiders only so far
+    - content.code.annotate
+    # - navigation.tabs
+    # - announce.dismiss
+    # - content.action.edit
+    # - content.action.view
+    # - content.code.annotate
+    # - content.code.copy
+    # # - content.tabs.link
+    # - content.tooltips
+    # # - header.autohide
+    # # - navigation.expand
+    # - navigation.footer
+    # - navigation.indexes
+    # # - navigation.instant
+    # # - navigation.prune
+    # - navigation.sections
+    # - navigation.tabs
+    # # - navigation.tabs.sticky
+    # - navigation.top
+    # - navigation.tracking
+    # - search.highlight
+    # - search.share
+    # - search.suggest
+    # - toc.follow
+    # # - toc.integrate
   language: en
   palette:
     - primary: white
@@ -42,6 +53,8 @@ theme:
   #     name: Switch to light mode    
   #   primary: indigo
   #   accent: blue
+
+  include_sidebar: true
 
 markdown_extensions:
   - abbr
@@ -77,8 +90,11 @@ extra_css:
 nav:
   - Home: index.md
   - Book: 
-    - Introduction to P-values: p_value.md
-    - Probability: probability.md
+    - Intro to A/B testing: "chapter_0/casual_inference.md"
+    - Introduction to P-values: 
+        - Overview : "chapter_1/chapter_1_overview.md"
+        - The p-value: "chapter_1/p_value.md"
+    - Probability: "chapter_1/probability.md"
     - What's this about: home.md
     - Other stuff: home.md
 
