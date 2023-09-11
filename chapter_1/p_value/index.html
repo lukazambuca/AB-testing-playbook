@@ -1,0 +1,919 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../chapter_1_overview/">
+      
+      
+        <link rel="next" href="../probability/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.3.1">
+    
+    
+      
+        <title>The p-value - A/B testing Playbook</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.046329b4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.85d0ee34.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#introduction-to-p-values" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="A/B testing Playbook" class="md-header__button md-logo" aria-label="A/B testing Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            A/B testing Playbook
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The p-value
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_1">
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../chapter_0/casual_inference/" class="md-tabs__link">
+          
+  
+    
+  
+  Book
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="A/B testing Playbook" class="md-nav__button md-logo" aria-label="A/B testing Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    A/B testing Playbook
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Book
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Book
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_0/casual_inference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Intro to A/B testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
+        
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Introduction to P-values
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Introduction to P-values
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter_1_overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    The p-value
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    The p-value
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#too-long-dont-wanna-read" class="md-nav__link">
+    Too Long; Dont Wanna Read
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-the-p-value" class="md-nav__link">
+    What is the P-value?
+  </a>
+  
+    <nav class="md-nav" aria-label="What is the P-value?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#computing-the-p-value" class="md-nav__link">
+    Computing the P-value
+  </a>
+  
+    <nav class="md-nav" aria-label="Computing the P-value">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-flipping-a-coin" class="md-nav__link">
+    Example: Flipping a coin
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-sided-test" class="md-nav__link">
+    One-sided test
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#two-sided-test" class="md-nav__link">
+    Two sided test
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qa" class="md-nav__link">
+    Q&amp;A
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-misconceptions-fighting-dolos" class="md-nav__link">
+    Common misconceptions (Fighting Dolos)
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../probability/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Probability
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What's this about
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Other stuff
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#too-long-dont-wanna-read" class="md-nav__link">
+    Too Long; Dont Wanna Read
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-the-p-value" class="md-nav__link">
+    What is the P-value?
+  </a>
+  
+    <nav class="md-nav" aria-label="What is the P-value?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#computing-the-p-value" class="md-nav__link">
+    Computing the P-value
+  </a>
+  
+    <nav class="md-nav" aria-label="Computing the P-value">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-flipping-a-coin" class="md-nav__link">
+    Example: Flipping a coin
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-sided-test" class="md-nav__link">
+    One-sided test
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#two-sided-test" class="md-nav__link">
+    Two sided test
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qa" class="md-nav__link">
+    Q&amp;A
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-misconceptions-fighting-dolos" class="md-nav__link">
+    Common misconceptions (Fighting Dolos)
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<script>
+    function highlightWords() {
+        var words = document.querySelectorAll('.highlight-word');
+        words.forEach(function(word) {
+            word.style.backgroundColor = 'rgba(147, 112, 219, 0.6)';
+        });
+    }
+
+    function unhighlightWords() {
+        var words = document.querySelectorAll('.highlight-word');
+        words.forEach(function(word) {
+            word.style.backgroundColor = 'transparent';
+        });
+    }
+</script>
+
+<h1 id="introduction-to-p-values">Introduction to P-values<a class="headerlink" href="#introduction-to-p-values" title="Permanent link">&para;</a></h1>
+<p>In this chapter we cover the definition of the infamous P-value, explain it using a simple example, show you how to calculate the value itself, and how where it falls in the world of experiments. </p>
+<h2 id="too-long-dont-wanna-read">Too Long; Dont Wanna Read<a class="headerlink" href="#too-long-dont-wanna-read" title="Permanent link">&para;</a></h2>
+<div style="border: 2px solid darkblue; border-radius: 10px; padding: 14px; background-color: #f9f9f9; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-10px) scale(1.05)'; this.style.boxShadow='0 12px 16px rgba(0, 0, 0, 0.2), 0 10px 30px rgba(0, 0, 0, 0.2)'; highlightWords();" onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1)'; unhighlightWords();">
+
+P-value is a measure used in statistics to help you decide if your <span class="highlight-word" style="background-color: transparent;">null hypothesis</span> (the assumption that there is no effect or relationship) is likely to be true or not. It's the probability that you would observe the data you have (or more extreme data) if the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span> is true.
+<br> <br>
+A small P-value (typically ≤ 0.05) suggests strong evidence against the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span>, so you reject the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span>. A large P-value (> 0.05) suggests weak evidence against the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span>, so you fail to reject the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span>.
+<br> <br>
+
+Remember, P-value is not the probability that the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span> is true, nor it is the probability that your alternative hypothesis is false. It's just a tool to help decide whether to reject the <span class="highlight-word" style="background-color: transparent;">null hypothesis</span>.
+</div>
+
+<h2 id="what-is-the-p-value">What is the P-value?<a class="headerlink" href="#what-is-the-p-value" title="Permanent link">&para;</a></h2>
+<p>For many years, the p-value has been widely recognized and used in statistical testing. It has played a crucial role in both scientific and business communities, in which it is primarily used to determine if a result is significant or not. Unfortunately, the P-value is probably the most misunderstood and misinterpreted statistical index. We hope to break this cycle in the following chapter.</p>
+<p>If you start looking around the internet for the definition of the P-value, you will find a lot mumbo jumbo that even senior analysts have a tough time unwrapping (or remembering for that matter). Don't worry, I will give you this formal defintion, so no need to scour the internet, but I will also devote a few paragraphs to explain in lay terms so that the concept sticks.  </p>
+<details class="note" open="open">
+<summary><em>Formal Definition</em>: P-Value</summary>
+<p>In statistical hypothesis testing, the p-value is the probability of obtaining a result
+at least as extreme as the one that was actually observed, assuming that the null
+hypothesis is true.</p>
+</details>
+<p>I hope I didn't lose you with the statistical lingo - we will unpack it later, but for now we begin with a simple example. Imagine we stumble upon a silver coin in the park, and our friend asks us to perform an experiment to determine whether the coin is (1) fair, or (2) unfairly biased towards one-side. Before blindly doing this experiment, let's discuss, what are our intital thoughts and expectations? Well, surely if the coin is fair we would expect that the there is a 50% chance that the coin lands on heads or tails when flipped. On the other hand, an unfair coin, such as one that is weighed more heavily on the Heads side, would have a &gt;50% chance of landing on heads when flipped. My personal expectation in a situation like this would be that the coin is actually fair. What's your guess?</p>
+<p>Suppose you and I are very lazy experimenters and we just flip the coin 20 times to test if it's fair or not. After flipping it 20 times, we observe that the coin landed on heads 16 times. We are very happy with how our experiment went and confidently conclude that the coin is biased towards head.</p>
+<details class="example" open="open">
+<summary>Flipping the coin 20 times</summary>
+<p>H H H H H H H H H H T H T H H H T T T H H H   <br />
+    Heads = 16, Tails = 4</p>
+</details>
+<p>But now imagine our friend says; “ I don’t believe you, you just flipped it a certain way and the coin landed on heads 16 times by pure chance. The coin is NOT heavier on one side.” Before we can go on with our day, we need to address this critique. We have to show our friend that the data (16 heads) would not be expected if it was just random or by chance. Sure, it’s always <em>possible</em> a fair coin lands on heads 16 times, but we can show that it would be <em>very unlikely</em> if indeed the coin was fair, - and that's all we can reasonably do. I'm saying it again, all you can do is show that if the coin was fair, it would be very unlikely that we saw 16 heads. Therefore, it's more likely that the coin is biased towards heads.</p>
+<p>Without knowing it, by doing this experiment we have also defined a null hypothesis. A null hypothesis is the starting point of all scientific discoveries because it begins and is formed with an assumption. The assumption could be that eating chocolate before a race makes you faster, cold showers increase social media screen time, or sharks are heavier than crocodiles. These might seem like absurd assumptions at first (or not .. I have never seen a post about a cold shower), but truly the only way to find the answer is to run an experiment, gather data, analyse the data, and make a conclusion - just like we did with the park coin. </p>
+<details class="note" open="open">
+<summary>Null hypothesis</summary>
+<p>The null hypothesis is a default position or the commonly accepted fact, and one that we would like to test</p>
+</details>
+<p>In our coin example, the null hypothesis would be that coin is fair sided (50% chance of landing on Heads). The alternative here is that the coin is biased. Remember that the null hypothesis is seen as a theoretical expectation, and one that we would like to test using a data driven experiment approach. </p>
+<h3 id="computing-the-p-value">Computing the P-value<a class="headerlink" href="#computing-the-p-value" title="Permanent link">&para;</a></h3>
+<p>Stating the null hypothesis is only half the job done. The rest relies on calculating the P-value, which is a probability. Earlier we said that the p-value is the probability of obtaining a result at least as extreme as the one that was actually observed, assuming that the null hypothesis is true. I'm sure you're yawning by now. What is this definition even saying? Let's break it down into digestible pieces</p>
+<p>[<code>the p-value is the probability</code>], okay so we know we're dealing with probability, which means the p-value is a number between 0 and 1. </p>
+<p>[<code>of obtaining a result</code>] result.. as in conclusion, or as in event. Putting the two togther, we have "the probability of getting a result". Well, we do this all the time! The probability of rain is 10%. This is the probability of a obtaining a result (rain), right?</p>
+<p>[<code>at least as extreme as the one that was actually observed</code>], "As least as extreme" - I would prefer to reframe this, "As we got or more extreme". Okay, now for the second part. The term "Actually observed" refers to the data collected from the experiment, like whether it rained or not, or the weight of sharks/crocodiles. Still, putting the three together doesn't quite register.</p>
+<p>[<code>assuming that the null hypothesis is true</code>] This is the final piece of the puzzle that shows the full picture. Sometime I wonder, why did it have to go on the end? Let's send this statement to the front. "Assuming that the null hypothesis is true" - this means that we should start with a mental model in which our hypothesis is true, and this is BEFORE doing the experiment or collecting data. </p>
+<p>Putting it all together, p-value is the probability of “getting the data that you actually got” under the assumption that the null
+hypothesis is actually true. If this still doesn't click, let's return to our coin example. The null hypothesis is that the coin is fair (i.e., P(Heads) = 0.5). We assume the hypothesis is true <em>before</em> we flip the coin. After flipping the coin 20 times, the p-value is the probability of getting 16 heads (the data we actually got). In a nutshell, the P-value summarises how likely it is that we got 16 heads (or more), if the coin was actually fair.</p>
+<p>If the p-value from your experiment is small, it indicates that the null hypothesis is unlikely to be true. This is because P-values close to 0 indicate that the observed data is unlikely to be due to chance. At risk of sounding like a broken record, I will say it only once more. In terms of our example, the probablity of getting 16 heads or more, assuming the null is true (fair coin), is low - and therefore it is unlikely that we got 16 heads by pure chance. Something else is going on.  is the P-value acts as an index that measures the strength og evidence against the null hypothesis. In such a case, you decide to discard the null hypothesis. This outcome is referred to as a statistically significant result.</p>
+<details class="question" open="open">
+<summary>How small should the P-value be?</summary>
+<p>It is statistical convention that the null hypothesis is rejected if the p-value is smaller than or equal to the significance level, which is set at α = 0.05</p>
+</details>
+<p>Generally, if the P-value is lower than 0.05, we reject the null hypothesis. This outcome is referred to as a statistically significant result. It's up to the experiementer to choose the cut-off mark, but it has become rather ritualistic to use 0.05. If you have trouble remembering which decision to make with your P-value, I can share with you a slogan from my university days. It goes a little like this; <code>If the P is low, the null must go</code>. In other words, if the P-value is low, reject the null hypothesis.</p>
+<h4 id="example-flipping-a-coin">Example: Flipping a coin<a class="headerlink" href="#example-flipping-a-coin" title="Permanent link">&para;</a></h4>
+<p>Let’s continue with our park coin example in which we test whether coin is fair, or biased towards Heads. Written in probability notation it would be; P(H) = 0.5. We start by defining our null hypothesis!</p>
+<details class="note" open="open">
+<summary>Null hypothesis: Coin example</summary>
+<ul>
+<li>Null hypothesis (H0): The coin is fair, i.e. P(H) = 0.5 </li>
+<li>Alternative hypothesis (Ha): The coin is biased towards heads: I.e P(H) &gt; 0.5</li>
+</ul>
+</details>
+<p>Now, before doing the experiment (flipping the coin) and collecting data, we need to set our level of significance. In this example, we choose our value to be 5% (α = 0.05). This means that if the P-value is below this cut-off, we reject the null hypothesis. Next, we go ahead and run our experiment! We flip the coin 20 times in a row, and observe 16 heads.</p>
+<p>At this point, we want to compute the P-value, which is the probability of obtaining a result at least as extreme as the one that was actually observed, assuming that the null hypothesis is true. Sigh.. this definition again. In OTHER words, we just want to know the probability of observing 16, 17, 18, 19 or 20 heads, assumung that the coin is far (P(H) = 0.5). The P-value is therefore the P(16 heads) + P(17 heads) + P(18 heads) + P(19 heads) + P(20 heads). To calculate the P(H) we use the binomial probability distribution with <em>n</em> =10 and <em>p</em>=0.5. </p>
+<div class="highlight"><span class="filename">binomial_test_one_sided.py</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">binomtest</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Binomial test</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">p_value</span> <span class="o">=</span> <span class="n">binomtest</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;greater&#39;</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">p_value</span><span class="p">)</span>
+</code></pre></div>
+<div style="font-family: monospace; font-size: 0.85em; color: #333; background-color: #f9f9f9; padding: 10px; margin-top: 10px; border-left: 3px solid #ddd;">
+<b>Output:</b><br/>
+BinomTestResult(k=16, n=20, alternative='greater', statistic=0.8, pvalue=0.005908966064453125)
+</div>
+
+<p>Since the p-value calculated 0.0059 is lower than our cut-off of 0.05, we reject our null hypothesis that the coin is fair. </p>
+<h2 id="one-sided-test">One-sided test<a class="headerlink" href="#one-sided-test" title="Permanent link">&para;</a></h2>
+<p>In the previous example, the null hypotheses was H0: coin is fair (p=0.5) and the alternative hypothesis was Ha: coin is biased toward heads (p&gt;0.5). With this hypothesis and flipping the coin 20 times, the null hypothesis would only rejected if the number of heads in 20 coin tosses was some number greater than 15. The 'rejection region' (shown as the blue bars in the graphs below) lies in the right tail of the distribution of the number of heads in 20 tosses of a coin. This type of experiment is called a one-sided test becasuse the alternative has the 'greater than' symbol'.</p>
+<p><img align="left" alt="Image title" src="../images/histogram.png" /></p>
+<h2 id="two-sided-test">Two sided test<a class="headerlink" href="#two-sided-test" title="Permanent link">&para;</a></h2>
+<p>On the other hand if you were testing H0: coin is fair (p=0.5) against the alternative hypothesis Ha: coin is not fair (p not equal to 0.5), you would reject the null hypothesis in favor of the alternative hypothesis if the number of heads was some number more than 15 or some number less than 5.  For example, we migh reject H0 in favour of the alternative if the number of heads was 3 or 18. If the alternative hypothesis has the not equals sign, then the rejection region would lie in both tails of the probability distribution of the number of heads.  This is shown by the shaded portion of the graph.  This is a two-tail test with rejection regions in both tails.</p>
+<p><img align="left" alt="Image title" src="../images/two_sided_histogram.png" /></p>
+<div class="highlight"><span class="filename">binomial_test_two_sided.py</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Two-sided Binomial test</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">p_value</span> <span class="o">=</span> <span class="n">binomtest</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;two-sided&#39;</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">p_value</span><span class="p">)</span>
+</code></pre></div>
+<div style="font-family: monospace; font-size: 0.85em; color: #333; background-color: #f9f9f9; padding: 10px; margin-top: 10px; border-left: 3px solid #ddd;">
+<b>Output:</b><br/>
+BinomTestResult(k=16, n=20, alternative='two-sided', statistic=0.8, pvalue=0.01181793212890625)
+</div>
+
+<p>However, note that when you use a significance level of 0.05 in a two-tailed test, you're splitting the 0.05 into two parts: 0.025 for each direction (or tail) of the test. This means you're checking for extreme values in both directions, with each direction having a 2.5% chance of occurring by random chance.</p>
+<h2 id="qa">Q&amp;A<a class="headerlink" href="#qa" title="Permanent link">&para;</a></h2>
+<h2 id="common-misconceptions-fighting-dolos">Common misconceptions (Fighting Dolos)<a class="headerlink" href="#common-misconceptions-fighting-dolos" title="Permanent link">&para;</a></h2>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../chapter_1_overview/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview" rel="prev">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../probability/" class="md-footer__link md-footer__link--next" aria-label="Next: Probability" rel="next">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Probability
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.instant", "navigation.tracking", "navigation.indexes", "navigation.top", "navigation.footer", "header.autohide", "content.action.edit", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.dfff1995.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.dff1b7c8.min.js"></script>
+      
+    
+  </body>
+</html>
