@@ -14,8 +14,4 @@ A/B testing, often termed split testing, has its origins in the experimental des
 
 The 2010s saw the democratization of A/B testing, with tools emerging that catered to smaller businesses and individual developers. However, its widespread adoption also brought ethical dilemmas to the forefront, exemplified by controversies like Facebook's 2014 emotion manipulation study. Today, A/B testing stands as a cornerstone in digital marketing, UX design, and product development, continually adapting with technological and analytical advancements.
 
-## funnel
 
-![Image title](images/funnel.png){ align=left }
-
-<img src="images/funnel.png" alt="Image title" width="200">
